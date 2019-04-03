@@ -85,7 +85,8 @@ https://infoarena.ro/runda/cerculdeinfo-lectia18-grafuri2
 https://infoarena.ro/runda/cerculdeinfo-lectia19-ahocorasick.suffixarray
 ```
 ## Probleme de antrenament
-https://www.infoarena.ro/problema/bridge
+Probleme dinamica:
+```https://www.infoarena.ro/problema/bridge
 https://www.infoarena.ro/problema/calatorie
 https://www.infoarena.ro/problema/coins
 https://www.infoarena.ro/problema/culori3
@@ -96,7 +97,7 @@ https://www.infoarena.ro/problema/poly
 https://codeforces.com/contest/1110/problem/D
 
 https://www.infoarena.ro/runda/cerculdeinfo-lectia3-programaredinamica1 aici gasiti mai multe mai grele
-
+```
 ```
 Lista de probleme de exersat 1:
 1. note
