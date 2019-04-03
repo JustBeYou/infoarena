@@ -65,7 +65,7 @@ https://www.infoarena.ro/problema/biconex
 https://www.infoarena.ro/problema/maxflow
 https://www.infoarena.ro/problema/hamilton
 ```
-##Cerc de info
+## Cerc de info
 ```https://www.infoarena.ro/runda/cerculdeinfo-lectia1-hashuri.rabinkarp 
 https://www.infoarena.ro/runda/cerculdeinfo-lectia2-arborideintervale 
 https://www.infoarena.ro/runda/cerculdeinfo-lectia3-programaredinamica1 
