@@ -1,7 +1,7 @@
-##Arhiva educationala
+## Arhiva educationala
 
 * Algoritmi de baza + matematica simpla (divizori, modulara, combinatorica, etc)
-https://www.infoarena.ro/problema/euclid2
+```https://www.infoarena.ro/problema/euclid2
 https://www.infoarena.ro/problema/euclid3
 https://www.infoarena.ro/problema/ciur
 https://www.infoarena.ro/problema/inversmodular
@@ -13,38 +13,38 @@ https://www.infoarena.ro/problema/submultimi
 
 https://www.infoarena.ro/problema/lgput
 https://www.infoarena.ro/problema/kfib
-
+```
 * Sortare si cautare
-https://www.infoarena.ro/problema/algsort
+```https://www.infoarena.ro/problema/algsort
 https://www.infoarena.ro/problema/cautbin
 https://www.infoarena.ro/problema/radixsort
-
+```
 * Interpretare expresii
-https://www.infoarena.ro/problema/evaluare
+```https://www.infoarena.ro/problema/evaluare
 https://www.infoarena.ro/problema/podm
-
+```
 * Structuri de date I
-https://www.infoarena.ro/problema/deque
+```https://www.infoarena.ro/problema/deque
 https://www.infoarena.ro/problema/hashuri
 https://www.infoarena.ro/problema/heapuri
-
+```
 * Structuri de date II
-https://www.infoarena.ro/problema/arbint
+```https://www.infoarena.ro/problema/arbint
 https://www.infoarena.ro/problema/aib
 https://www.infoarena.ro/problema/disjoint
-
+```
 * Programare dinamica clasica
-https://www.infoarena.ro/problema/cmlsc
+```https://www.infoarena.ro/problema/cmlsc
 https://www.infoarena.ro/problema/scmax
 https://www.infoarena.ro/problema/ssm
 https://www.infoarena.ro/problema/rucsac
-
+```
 * Siruri de caractere
-https://www.infoarena.ro/problema/strmatch
+```https://www.infoarena.ro/problema/strmatch
 https://www.infoarena.ro/problema/ahocorasick
-
+```
 * Grafuri I
-https://www.infoarena.ro/problema/royfloyd
+```https://www.infoarena.ro/problema/royfloyd
 https://www.infoarena.ro/problema/sortaret
 https://www.infoarena.ro/problema/bfs
 https://www.infoarena.ro/problema/dfs
@@ -53,20 +53,20 @@ https://www.infoarena.ro/problema/bellmanford
 https://www.infoarena.ro/problema/dijkstra
 https://www.infoarena.ro/problema/darb
 https://www.infoarena.ro/problema/apm
-
+```
 * Structuri de date III
-https://www.infoarena.ro/problema/trie
+```https://www.infoarena.ro/problema/trie
 https://www.infoarena.ro/problema/rmq
-
+```
 * Grafuri II
-https://www.infoarena.ro/problema/lca
+```https://www.infoarena.ro/problema/lca
 https://www.infoarena.ro/problema/ctc
 https://www.infoarena.ro/problema/biconex
 https://www.infoarena.ro/problema/maxflow
 https://www.infoarena.ro/problema/hamilton
-
+```
 ##Cerc de info
-https://www.infoarena.ro/runda/cerculdeinfo-lectia1-hashuri.rabinkarp 
+```https://www.infoarena.ro/runda/cerculdeinfo-lectia1-hashuri.rabinkarp 
 https://www.infoarena.ro/runda/cerculdeinfo-lectia2-arborideintervale 
 https://www.infoarena.ro/runda/cerculdeinfo-lectia3-programaredinamica1 
 https://infoarena.ro/runda/cerculdeinfo-lectia4-programaredinamica2 
@@ -83,7 +83,7 @@ https://infoarena.ro/runda/cerculdeinfo-lectia16-comb.pinex
 https://infoarena.ro/runda/cerculdeinfo-lectia17-teoriajocurilo 
 https://infoarena.ro/runda/cerculdeinfo-lectia18-grafuri2 
 https://infoarena.ro/runda/cerculdeinfo-lectia19-ahocorasick.suffixarray
-
+```
 ## Probleme de antrenament
 https://www.infoarena.ro/problema/bridge
 https://www.infoarena.ro/problema/calatorie
