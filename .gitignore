@@ -1,0 +1,6 @@
+password.txt
+bin
+*.o
+*.in
+*.out
+*.ok

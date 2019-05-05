@@ -1,0 +1,85 @@
+#!/usr/bin/python
+
+import argparse
+from requests import get, post, session
+import lxml.html
+import lxml
+from os import system, path
+from termcolor import colored
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0"
+}
+username = "littlewho"
+password = open('password.txt', 'r').read()
+
+parser = argparse.ArgumentParser(description='Jmecherie pentru infoarena')
+parser.add_argument(action='store', dest='problem', help='Numele problemei')
+parser.add_argument(action='store', dest='action', help='Actiunea ce o sa fie rulata', choices=['i', 't', 's'])
+args = parser.parse_args()
+
+url = 'https://www.infoarena.ro/problema/'
+delete = {'<br />':'', '<td>':'', '</td>':''}
+def init(problem):
+    rsp = get(url + problem).text
+    root = lxml.html.fromstring(rsp)
+    table = root.xpath('//table[@class="example"]')[0]
+    input_data = lxml.etree.tostring(table.xpath('.//tr')[1].xpath('.//td')[0])
+    for k in delete:
+        input_data = input_data.replace(k, delete[k])
+    output_data = lxml.etree.tostring(table.xpath('.//tr')[1].xpath('.//td')[1])
+    for k in delete:
+        output_data = output_data.replace(k, delete[k])
+
+    with open('bin/{}.in'.format(problem), 'w') as f:
+        f.write(input_data)
+    with open('bin/{}.ok'.format(problem), 'w') as f:
+        f.write(output_data)
+    with open('template.cpp', 'r') as f:
+        template = f.read()
+    template = template.replace('!!!input!!!', '{}.in'.format(problem))
+    template = template.replace('!!!output!!!', '{}.out'.format(problem))
+
+    if path.isfile('probleme/{}.cpp'.format(problem)):
+        print ("Sursa {} deja".format(colored("exista", "red")))
+        return
+    with open('probleme/{}.cpp'.format(problem), 'w') as f:
+        f.write(template)
+
+    print ("Totu-i gata in {}".format(colored('probleme/{}.cpp').format(problem), "green"))
+
+def test(problem):
+    system('rm bin/{0} && g++ -O3 probleme/{0}.cpp -o bin/{0}'.format(problem))
+    system('cd bin && time ./{}'.format(problem))
+    with open('bin/{}.ok'.format(problem), 'r') as f:
+        ok = f.read().strip()
+    with open('bin/{}.out'.format(problem), 'r') as f:
+        out = f.read().strip()
+    print ("--- OUTPUT ---")
+    print (out)
+    print ("--- --- --- ---")
+    if ok == out: print (colored("Jmekerie", "green"))
+    else:         print (colored("N-ai bulan\n" + ok, "red"))
+
+login_url = 'https://infoarena.ro/login'
+submit_url = 'https://www.infoarena.ro/submit'
+def submit(problem):
+    print ("Se trimit sursa...")
+    s = session()
+    s.post(login_url, data={'username':username, 'password':password})
+    files = {'solution': open('probleme/{}.cpp'.format(problem, 'r'))}
+    data = {'task_id':problem, 'round_id':'arhiva', 'compiler_id':'cpp-64'}
+    s.post(submit_url, headers=headers, files=files, data=data)
+    print (colored("S-a trimis", "green"))
+
+funcs = {
+    'i': init,
+    't': test,
+    's': submit
+}
+
+try:
+    funcs[args.action](args.problem)
+except Exception as e:
+    print ("Ai stricat ceva bossule")
+    print (colored(e, "red"))

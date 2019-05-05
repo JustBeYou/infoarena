@@ -5,10 +5,13 @@ using namespace std;
 typedef unsigned long long ull;
 typedef signed long long ll;
 typedef unsigned int uint;
-const int nmax = 10000;
+typedef unsigned char uchar;
+
+const int nmax = 1e5;
 
 int main() {
-  freopen("input", "r", stdin);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
 
-  return 0;
+    return 0;
 }
