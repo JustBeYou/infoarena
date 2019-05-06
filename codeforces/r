@@ -1,0 +1,154 @@
+#!/usr/bin/python3
+
+from lxml import etree
+from lxml.html import fromstring
+from requests import session, get, post
+from os import path, mkdir, system
+from glob import glob
+from shutil import copyfile
+from termcolor import colored
+import mechanize
+import http.cookiejar as cookielib
+from pickle import load, dump
+import argparse
+
+parser = argparse.ArgumentParser(description='Jmecherie maxima pentru codeforces')
+parser.add_argument(action='store', dest='contest', help='ID-ul concursului')
+parser.add_argument(action='store', dest='action', help='Actiunea ce o sa fie rulata: i - initializeaza concurs, t - testeaza problema, s - submit la problema', choices=['i', 't', 's'])
+parser.add_argument(dest='problem', nargs='?', help='ID-ul problemei', default=None)
+args = parser.parse_args()
+
+def cfpath(contest_id, problem):
+    return "{}/{}.cpp".format(contest_id, problem)
+
+def filtr(s):
+    l = ['<pre>', '</pre>']
+    for i in l:
+        s = s.replace(i, '')
+    return s.strip()
+
+contest_url = 'https://codeforces.com/contest/{}/'
+cf_url = 'https://codeforces.com'
+def init_contest(contest_id): 
+    contest_id = str(contest_id)
+    rsp = get(contest_url.format(contest_id)).text
+    root = fromstring(rsp)
+    table = root.xpath('//table[@class="problems"]')[0]
+    rows = table.xpath('.//tr')
+    rows.pop(0)
+
+    problems = []
+    for row in rows:
+        problem = row.xpath('.//td/a')[0].text.strip()
+        link = row.xpath('./td/a')[0].get('href')
+        problems.append((problem, link))
+
+    if not path.exists(contest_id):
+        mkdir(contest_id)
+        print ('Created directory ' + colored('contest_id/', 'blue'))
+
+    for problem, link in problems:
+        if not path.exists(cfpath(contest_id, problem)):
+            copyfile('template.cpp', cfpath(contest_id, problem))
+        
+        rsp = get(cf_url + link).text
+        root = fromstring(rsp)
+        tests = root.xpath('//div[@class="sample-test"]')[0]
+        inputs = tests.xpath('.//div[@class="input"]')
+        outputs = tests.xpath('.//div[@class="output"]')
+
+        for i in range(len(inputs)):
+            input_elem = filtr(etree.tostring(inputs[i].xpath('.//pre')[0]).decode('utf-8'))
+            output_elem = filtr(etree.tostring(outputs[i].xpath('.//pre')[0]).decode('utf-8'))
+            
+            with open("bin/{}{}.in".format(problem, i), "w") as f:
+                f.write(input_elem + '\n')
+            with open("bin/{}{}.ok".format(problem, i), "w") as f:
+                f.write(output_elem + '\n')
+            print ('Added test case ' + colored("bin/{}{}.in".format(problem, i), 'blue'))
+
+def compile(problem_id, contest_id):
+    system('rm -f bin/{0} && g++ -DLOCAL -Wall -Wextra -O3 {1}/{0}.cpp -o bin/{0}'.format(
+            problem_id, contest_id
+        ))
+    print ('Compiled' + colored('{}/{}.cpp'.format(contest_id, problem_id), 'blue'))
+
+def test_problem(problem_id, contest_id):
+    compile(problem_id, contest_id)
+
+    fail = []
+    for filename in glob('bin/{}*.in'.format(problem_id)):
+        system("cat {} | ./bin/{} > bin/output".format(filename, problem_id))
+        with open(filename[:-2] + 'ok', 'r') as f:
+            good = f.read().strip()
+        with open('bin/output', 'r') as f:
+            output = f.read().strip()
+
+        if output != good:
+            with open(filename, 'r') as f:
+                input_data = f.read().strip()
+            fail.append((filename, input_data, output, good))
+
+    if len(fail) == 0:
+        print (colored("Examples passed", "green"))
+    else:
+        print (colored("Failed", "red"))
+        for f in fail:
+            print ('--- {} ---'.format(colored(f[0], 'blue')))
+            print (f[1])
+            print ('--- output ---')
+            print (colored(f[2], 'red'))
+            print ('--- expected ---')
+            print (colored(f[3], 'green'))
+            print ('--- --- ---')
+            print ()
+
+def login(username, password):
+    cj = cookielib.LWPCookieJar('cookies.txt')
+    br = mechanize.Browser()
+    br.set_handle_robots(False)
+    br.set_cookiejar(cj)
+    
+    br.open('https://codeforces.com/enter?back=%2F')
+
+    def select_form(form):
+        return form.attrs.get('id', None) == 'enterForm'
+    br.select_form(predicate=select_form)
+    br.form["handleOrEmail"] = username
+    br.form["password"] = password
+    br.submit()
+    return br, cj
+
+problem_url = 'https://codeforces.com/contest/{}/problem/{}'
+def submit(problem_id, contest_id):
+    """if path.exists('cookies.txt'):
+        print ('load')
+        br = mechanize.Browser()
+        br.set_handle_robots(False)
+        cj = cookielib.LWPCookieJar('cookies.txt')
+        br.set_cookiejar(cj)
+    else:"""
+    with open('login.txt', 'r') as f:
+        data = f.read().strip().split(':')
+    br, cj = login(data[0], data[1])
+    print ("Logged in")
+    
+    br.open(problem_url.format(contest_id, problem_id))
+    to_upload = (open(cfpath(contest_id, problem_id), "r"), 'text/x-c++src', problem_id + '.cpp')
+    print ("Uploading...")
+
+    def select_form(form):
+        return form.attrs.get('class', None) == 'submitForm'
+    br.select_form(predicate=select_form)
+    br.form.add_file(*to_upload)
+    br.submit()
+    print (colored("Submission done", "green"))
+
+if args.action == 'i':
+    init_contest(args.contest)
+elif args.problem == None:
+    print (colored('Problem ID not specified', 'red'))
+elif args.action == 't':
+    test_problem(args.problem, args.contest)
+elif args.action == 's':
+    submit(args.problem, args.contest)
